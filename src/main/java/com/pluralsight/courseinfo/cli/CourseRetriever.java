@@ -1,5 +1,7 @@
 package com.pluralsight.courseinfo.cli;
 
+import java.util.Scanner;
+
 public class CourseRetriever {
 
     public static void main(String... args) {
@@ -19,7 +21,9 @@ public class CourseRetriever {
     }
 
     private static void retrieveCourses(String authorId) {
-        System.out.println("Retrieving courses for author" + authorId);
+//        Scanner input = new Scanner(System.in);
+//        String newAuthor = input.next();
+        System.out.println("Retrieving courses for author " + authorId);
     }
 
 }
