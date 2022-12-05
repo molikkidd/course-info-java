@@ -1,14 +1,18 @@
 package com.pluralsight.courseinfo.cli;
 
-import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerFactory;
 
 public class CourseRetriever {
+//    add logger
+    private static final Logger LOG = LoggerFactory.getLogger(CourseRetriever.class);
 
     public static void main(String... args) {
-        System.out.println("Course Retriever started");
+        LOG.info("Course Retriever starting");
 
         if(args.length == 0 ) {
-            System.out.println("Please provide an author name as first arguement.");
+            LOG.info("Please provide an author name as first arguement.");
             return;
         }
 
