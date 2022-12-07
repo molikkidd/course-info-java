@@ -13,7 +13,7 @@ public class CourseRetriever {
         LOG.info("Course Retriever starting");
 
         if(args.length == 0 ) {
-            LOG.warn("Please provide an author name as first arguement.");
+            LOG.warn("Please provide an author name as first argument.");
             return;
         }
 
@@ -25,10 +25,9 @@ public class CourseRetriever {
     }
 
     private static void retrieveCourses(String authorId) {
-//        Scanner input = new Scanner(System.in);
-//        String newAuthor = input.next();
         LOG.info("Retrieving courses for author '{}'", authorId);
         CourseRetrieverService courseRetrieverService = new CourseRetrieverService();
+
         String coursesToStore = courseRetrieverService.getCoursesFor(authorId);
         LOG.info("Retrieved the following courses {}", coursesToStore);
     }
