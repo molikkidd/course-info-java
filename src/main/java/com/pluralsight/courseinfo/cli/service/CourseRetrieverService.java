@@ -8,7 +8,10 @@ import java.net.http.HttpResponse;
 
 public class CourseRetrieverService {
     private static final String PS_URI = "https://app.pluralsight.com/profile/data/author/%s/all-content";
-    private static final HttpClient CLIENT = HttpClient.newHttpClient();
+    private static final HttpClient CLIENT = HttpClient
+            .newBuilder()
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .build();
 
     public String getCoursesFor(String authorId) {
 //        fall back URL
@@ -18,7 +21,11 @@ public class CourseRetrieverService {
                 .build();
         try {
             HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            return switch(response.statusCode()) {
+                case 200 -> response.body();
+                case 404 -> "";
+                default -> throw new RuntimeException("plural sight api call failed with this status" + response.statusCode());
+            };
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Could not call Pluralsight api", e);
         }
