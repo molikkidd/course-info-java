@@ -1,5 +1,9 @@
 package com.pluralsight.courseinfo.cli.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,6 +18,8 @@ public class CourseRetrieverService {
             .followRedirects(HttpClient.Redirect.ALWAYS)
             .build();
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public List<PluralSightCourse> getCoursesFor(String authorId) {
 //        fall back URL
         HttpRequest request = HttpRequest
@@ -23,7 +29,7 @@ public class CourseRetrieverService {
         try {
             HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             return switch(response.statusCode()) {
-                case 200 -> null;
+                case 200 -> toPluralSightCourses(response);
                 case 404 -> List.of();
                 default -> throw new RuntimeException("plural sight api call failed with this status" + response.statusCode());
             };
@@ -31,5 +37,11 @@ public class CourseRetrieverService {
             throw new RuntimeException("Could not call Pluralsight api", e);
         }
 
+    }
+
+    private List<PluralSightCourse> toPluralSightCourses(HttpResponse<String> response) throws JsonProcessingException {
+        JavaType returnType = OBJECT_MAPPER.getTypeFactory()
+                        .constructCollectionType(List.class, PluralSightCourse.class);
+        return OBJECT_MAPPER.readValue(response.body(), returnType);
     }
 }
